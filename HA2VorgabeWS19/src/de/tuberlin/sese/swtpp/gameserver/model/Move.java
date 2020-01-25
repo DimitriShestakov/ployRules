@@ -11,7 +11,7 @@ import java.util.Arrays;
  * May be specialized further to represent game-specific move information.
  *
  */
-public class Move implements Serializable {
+public class Move {
 
 	/**
 	 * 
