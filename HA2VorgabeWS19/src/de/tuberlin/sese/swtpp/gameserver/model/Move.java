@@ -37,6 +37,39 @@ public class Move implements Serializable{
 		this.player = player;
 	}
 	
+	/*
+	 * Returns a String of the distance and and direction between the start and the target of a move
+	 * in a format z.B "3SW" meaning distance = 3, and direction = SW.
+	 * Returns "-1" if there is no possible diagonal,vertical or horizontal way between these points
+	 * Returns "0KEINE" if the start and the target are the same
+	 * Badly formated because of the 25 lines restriction
+	 */
+	public String distanceAndDirectionOfTheMove() {
+		PloyGameState pgs = new PloyGameState(this.board);
+        Integer indexOfStart = pgs.getIndexOfAPosition(this.move.substring(0,2));
+        Integer indexOfEnd = pgs.getIndexOfAPosition(this.move.substring(3,5));
+        Integer moveDistance = -1; String moveDirection = ""; String moveDistanceAndDirection = "";
+        //check if does not move
+        if(this.move.substring(0,2).equals(this.move.substring(3,5))) moveDistanceAndDirection = Integer.toString(0) + "KEINE";
+        //Check horizontally
+        for (int j = 0; j <= 8 ; j++) {
+            //i = 0,9,18,27...
+            int i = j * 9;
+            if(indexOfStart >= i && indexOfStart <= (i + 9) && indexOfEnd >= i && indexOfEnd <= (i + 9)) {
+                moveDirection = indexOfEnd - indexOfStart > 0 ? "EE" : "WW"; moveDistance = Math.abs(indexOfEnd - indexOfStart); }
+            //Check vertically
+            if((indexOfStart - j) % 9 == 0 && (indexOfEnd - j) % 9 == 0) {
+                moveDirection = indexOfEnd - indexOfStart > 0 ? "SS" : "NN"; moveDistance = Math.abs(((indexOfEnd - j) / 9) - ((indexOfStart - j) / 9)); }
+            //Check the diagonal first check the NW-SE diagonal and then NE-SW
+            if(indexOfEnd == indexOfStart + 10 * j) {
+                moveDirection = indexOfEnd - indexOfStart > 0 ? "SE" : "NW"; moveDistance = j; }
+            if(indexOfEnd == indexOfStart + 8 * j) {
+                moveDirection = indexOfEnd - indexOfStart > 0 ? "SW" : "NE"; moveDistance = j; }
+        }
+        moveDistanceAndDirection = Integer.toString(moveDistance) + moveDirection;
+        return moveDistanceAndDirection;
+	}
+	
     /*
      *Checks whether the target location of the move has a white "w" or a black "b" figure on it
      */
