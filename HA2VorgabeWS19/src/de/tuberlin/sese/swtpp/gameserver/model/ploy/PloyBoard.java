@@ -3,6 +3,7 @@ import de.tuberlin.sese.swtpp.gameserver.model.ploy.PloyPiece;
 public class PloyBoard {
 		private PloyPiece[][] board;
 		
+		
 		/**Create new board instance**/
 		public PloyBoard() {
 			board = new PloyPiece[9][9];
@@ -35,7 +36,10 @@ public class PloyBoard {
 		}
 		
 		
-		
+		/**
+	     * Removes piece at location.
+	     * @param location The location to remove at.
+	     */
 		private void removePieceAt(PloyLocation location) {
 			board[location.getRow()][location.getCol()] = null;
 		}
@@ -51,4 +55,33 @@ public class PloyBoard {
 				   location.getCol() >= 0 &&
 				   location.getCol() < 9;
 		}
+		
+		/**
+	     * Gets piece at location of board.
+	     * @param location Location to find piece at.
+	     * @return Piece at location/
+	     */
+	    public PloyPiece getPieceAt(PloyLocation location) {
+	        return board[location.getRow()][location.getCol()];
+	    }
+	    
+	    /**
+	     * Displays board with P being Piece.
+	     */
+	    @Override
+	    public String toString() {
+	        String s = "  0 1 2 3 4 5 6 7\n";
+	        for (int row = 0; row < 8; row++) {
+	            s += row;
+	            for (int col = 0; col < 8; col++) {
+	                if (board[row][col] != null) {
+	                    s += " " + board[row][col].getId();
+	                } else {
+	                    s += " -";
+	                }
+	            }
+	            s += "\n";
+	        }
+	        return s;
+	    }
 }
