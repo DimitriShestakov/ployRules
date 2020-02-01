@@ -24,7 +24,7 @@ public class PloyGame extends Game implements Serializable {
 	// just for better comprehensibility of the code: assign white and black player
 	private Player blackPlayer;
 	private Player whitePlayer;
-
+	private PloyBoard ployBoard;
 	// internal representation of the game state
 	// TODO: insert additional game data here
 
@@ -36,6 +36,7 @@ public class PloyGame extends Game implements Serializable {
 		super();
 
 		// TODO: init internal representation
+		ployBoard = new PloyBoard();
 	}
 
 	public String getType() {
@@ -223,5 +224,9 @@ public class PloyGame extends Game implements Serializable {
 		// TODO: implement 
 		
 		return false;
+	}
+	
+	public PloyBoard getPloyBoard() {
+		return ployBoard;
 	}
 }
