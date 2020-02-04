@@ -48,23 +48,24 @@ public class Figure {
 	public Boolean canMoveAccordingToRules(int moveDistance, String moveDirection, Boolean rotation) {
 		//every figure can do only rotation
 		if(moveDistance == 0 && rotation) return true;
-		if(this.type == "shield") {
-			if(this.directionsFacing.contains(moveDirection) && ((moveDistance == 1) || (moveDistance == 0) && rotation == true)) return true;
-		}
-		if(this.type == "probe") {
-			if(this.directionsFacing.contains(moveDirection)
-					&& ((moveDistance <= 2 && moveDistance > 0 && rotation == false) 
-					|| (moveDistance == 0 && rotation == true))) return true;
-		}
-		if(this.type == "lance") {
-			if(this.directionsFacing.contains(moveDirection) 
-					&& ((moveDistance <= 3 && moveDistance > 0 && rotation == false) 
-					|| (moveDistance == 0 && rotation == true))) return true;
-		}
-		if(this.type == "commander") {
-			if(this.directionsFacing.contains(moveDirection)
-					&& ((moveDistance == 1 && rotation == false) 
-					|| (moveDistance == 0 && rotation == true))) return true;
+		//has to be true for any figure type
+		if(this.directionsFacing.contains(moveDirection)) {
+			//shield can move and rotate in the same move
+			if(this.type.equals("shield")) {
+				return (moveDistance == 1);
+			}
+			//other figures can not move and rotate at the same time
+			if(!rotation) {
+				if(this.type.equals("probe")) {
+					return (moveDistance <= 2 && moveDistance > 0);
+				}
+				if(this.type.equals("lance")) {
+					return (moveDistance <= 3 && moveDistance > 0);
+				}
+				if(this.type.equals("commander")) {
+					return (moveDistance == 1);
+				}
+			}
 		}
 		return false;
 	}

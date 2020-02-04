@@ -22,6 +22,10 @@ public class PloyGameMove extends Move {
 	public PloyGameMove(String move, String boardBefore, Player player) {
 		super(move, boardBefore, player);
 	}
+
+	public Boolean moveInBetweenPositionsAndTargetForPlayerAreFree(String playerString) {
+		return !(moveIsBlockedByFiguresInBetween() || targetPositionHasWhitesOrBlacksOnIt(playerString));
+	}
 	
 	/*
 	 * Hilfsfunktion for the moveIsBlockedByFiguresInBetween
@@ -40,7 +44,8 @@ public class PloyGameMove extends Move {
 
 	        return false;
 	    }
-	 
+
+
 	 /*
 	  * Checks whether there are pieces in between two positions on the current board
 	  */
@@ -56,21 +61,18 @@ public class PloyGameMove extends Move {
 	        if(moveDistance.equals("1")) return false;
 	        //check if the move done is horizontal
 	        if(moveDirection.equals("WW") || moveDirection.equals("EE")) {
-	          if(moveInBetweenPositionsFull(1)) return true;
+	          return(moveInBetweenPositionsFull(1));
 	        }
 	        //check if vertical
 	        if(moveDirection.equals("SS") || moveDirection.equals("NN")) {
-	            if(moveInBetweenPositionsFull(9)) return true;
+	            return (moveInBetweenPositionsFull(9));
 	        }
 	        //check if diagonal from left to right
 	        if(moveDirection.equals("SE") || moveDirection.equals("NW")) {
-	            if(moveInBetweenPositionsFull(10)) return true;
+	            return (moveInBetweenPositionsFull(10));
 	        }
 	        //check if diagonal from right to left
-	        if(moveDirection.equals("SW") || moveDirection.equals("NE")) {
-	            if(moveInBetweenPositionsFull(8)) return true;
-	        }
-	        return false;
+	        else return moveInBetweenPositionsFull(8);
 	    }
 	
 	/*
@@ -100,8 +102,7 @@ public class PloyGameMove extends Move {
             //Check the diagonal first check the NW-SE diagonal and then NE-SW
             if(biggerIndex == smallerIndex + 10 * j) {
                 moveDirection = indexOfEnd - indexOfStart > 0 ? "SE" : "NW"; moveDistance = j; }
-            if(biggerIndex == smallerIndex + 8 * j) {
-                moveDirection = indexOfEnd - indexOfStart > 0 ? "SW" : "NE"; moveDistance = j; }
+            else moveDirection = indexOfEnd - indexOfStart > 0 ? "SW" : "NE"; moveDistance = j;
         }
         moveDistanceAndDirection = Integer.toString(moveDistance) + moveDirection;
         return moveDistanceAndDirection;
@@ -112,11 +113,17 @@ public class PloyGameMove extends Move {
      */
     public Boolean targetPositionHasWhitesOrBlacksOnIt(String playerString) {
         if(!(playerString.equals("w") || playerString.equals("b"))) return false;
-
-        PloyGameState currentGameState = new PloyGameState(this.board);
+		PloyGameState currentGameState = new PloyGameState(this.board);
         String moveEnd = this.move.substring(3, 5);
         String codeOfTheFigure = currentGameState.whatFigureIsPlacedOnThatPosition(moveEnd);
-        if(codeOfTheFigure.startsWith(playerString)) return true;
+        //I check if the figure does not move and only has rotation -> the move can be done
+		//It is only done to reduce the dumb McCabe complexity
+        String distanceAndDirectionCurrentMove = distanceAndDirectionOfTheMove();
+		Boolean rotation = !this.move.endsWith("0");
+		Integer moveDistance = (distanceAndDirectionCurrentMove.equals("")) ? 0 : Integer.parseInt(distanceAndDirectionCurrentMove.substring(0,1));
+		if(moveDistance == 0 && rotation) return false;
+//----------------------------------------------------
+		if(codeOfTheFigure.startsWith(playerString)) return true;
 
         return false;
     }

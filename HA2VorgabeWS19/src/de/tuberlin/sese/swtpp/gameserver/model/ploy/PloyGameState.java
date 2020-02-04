@@ -23,6 +23,10 @@ public class PloyGameState{
 	    {
 	        return (byte)(((bits & 0xff) << shift) | ((bits & 0xff) >>> (8 - shift)));
 	    }
+
+	    public Boolean gameIsLostForPlayer(String playerString) {
+	    return  (!(playerHasCommander(playerString)) || playerHasOnlyCommanderLeft(playerString));
+        }
 	  /*
 	   * Takes an arrayList of positions and turns it into a properly formated board string
 	   */
