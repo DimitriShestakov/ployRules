@@ -84,28 +84,29 @@ public class PloyGameMove extends Move {
 	 */
 	public String distanceAndDirectionOfTheMove() {
 		PloyGameState pgs = new PloyGameState(this.board);
-        Integer indexOfStart = pgs.getIndexOfAPosition(this.move.substring(0,2));
-        Integer indexOfEnd = pgs.getIndexOfAPosition(this.move.substring(3,5));
-        Integer smallerIndex = Math.min(indexOfStart,indexOfEnd);  Integer biggerIndex = Math.max(indexOfStart,indexOfEnd);
-        Integer moveDistance = -1; String moveDirection = ""; String moveDistanceAndDirection = "";
-        //check if does not move
-        if(this.move.substring(0,2).equals(this.move.substring(3,5))) return "";
-        for (int j = 0; j <= 8 ; j++) {
-            //i = 0,9,18,27...
-            int i = j * 9;
-            //Check horizontally
-            if(indexOfStart >= i && indexOfStart <= (i + 9) && indexOfEnd >= i && indexOfEnd <= (i + 9)) {
-                moveDirection = indexOfEnd - indexOfStart > 0 ? "EE" : "WW"; moveDistance = Math.abs(indexOfEnd - indexOfStart); }
-            //Check vertically
-            if((indexOfStart - j) % 9 == 0 && (indexOfEnd - j) % 9 == 0) {
-                moveDirection = indexOfEnd - indexOfStart > 0 ? "SS" : "NN"; moveDistance = Math.abs(((indexOfEnd - j) / 9) - ((indexOfStart - j) / 9)); }
-            //Check the diagonal first check the NW-SE diagonal and then NE-SW
-            if(biggerIndex == smallerIndex + 10 * j) {
-                moveDirection = indexOfEnd - indexOfStart > 0 ? "SE" : "NW"; moveDistance = j; }
-            else moveDirection = indexOfEnd - indexOfStart > 0 ? "SW" : "NE"; moveDistance = j;
-        }
-        moveDistanceAndDirection = Integer.toString(moveDistance) + moveDirection;
-        return moveDistanceAndDirection;
+		Integer indexOfStart = pgs.getIndexOfAPosition(this.move.substring(0,2));
+		Integer indexOfEnd = pgs.getIndexOfAPosition(this.move.substring(3,5));
+		Integer smallerIndex = Math.min(indexOfStart,indexOfEnd);  Integer biggerIndex = Math.max(indexOfStart,indexOfEnd);
+		Integer moveDistance = -1; String moveDirection = ""; String moveDistanceAndDirection = "";
+		//check if does not move
+		for (int j = 0; j <= 8 ; j++) {
+			//i = 0,9,18,27...
+			int i = j * 9;
+			//Check horizontally
+			if(indexOfStart >= i && indexOfStart <= (i + 9) && indexOfEnd >= i && indexOfEnd <= (i + 9)) {
+				moveDirection = indexOfEnd - indexOfStart > 0 ? "EE" : "WW"; moveDistance = Math.abs(indexOfEnd - indexOfStart); }
+			//Check vertically
+			if((indexOfStart - j) % 9 == 0 && (indexOfEnd - j) % 9 == 0) {
+				moveDirection = indexOfEnd - indexOfStart > 0 ? "SS" : "NN"; moveDistance = Math.abs(((indexOfEnd - j) / 9) - ((indexOfStart - j) / 9)); }
+			//Check the diagonal first check the NW-SE diagonal and then NE-SW
+			if(biggerIndex == smallerIndex + 10 * j) {
+				moveDirection = indexOfEnd - indexOfStart > 0 ? "SE" : "NW"; moveDistance = j; }
+			if(biggerIndex == smallerIndex + 8 * j) {
+				moveDirection = indexOfEnd - indexOfStart > 0 ? "SW" : "NE"; moveDistance = j; }
+		}
+		//check if does not move
+		moveDistanceAndDirection = (this.move.substring(0,2).equals(this.move.substring(3,5))) ? "" : Integer.toString(moveDistance) + moveDirection;
+		return moveDistanceAndDirection;
 	}
 	
     /*
