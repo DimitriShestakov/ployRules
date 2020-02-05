@@ -228,6 +228,7 @@ public class PloyGame extends Game implements Serializable {
 		PloyGameState currentGameState = new PloyGameState(this.board);
 		PloyGameMove currentMove = new PloyGameMove(moveString,this.board,player);
 		//if there is no figure standing on that position return false
+		//Are we really need line 232? If it does, can you think of a test case for this line?
 		if(currentMove.whatFigureToMove().equals("")) return false;
 		Figure figureToMove = new Figure(currentMove.whatFigureToMove());
 		//Extract the distance and the direction of the move and check the resulting String whether it is an invalid move(then returns "-1")
