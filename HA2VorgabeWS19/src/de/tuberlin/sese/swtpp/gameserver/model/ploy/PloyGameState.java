@@ -9,45 +9,44 @@ import java.util.LinkedList;
 
 
 public class PloyGameState{
-	/**
-	 * 
-	 */
-	String board;
-	Player player;
+    /**
+     *
+     */
+    String board;
+    Player player;
 
-	public PloyGameState(String board) {		
-		this.board = board;
-	}
-	
-	  private  byte rotateLeft(byte bits, int shift)
-	    {
-	        return (byte)(((bits & 0xff) << shift) | ((bits & 0xff) >>> (8 - shift)));
-	    }
+    public PloyGameState(String board) {
+        this.board = board;
+    }
 
-	    public Boolean gameIsLostForPlayer(String playerString) {
-	    return  (!(playerHasCommander(playerString)) || playerHasOnlyCommanderLeft(playerString));
-        }
-	  /*
-	   * Takes an arrayList of positions and turns it into a properly formated board string
-	   */
-	public String arrayListOfPositionsToString(ArrayList<String> newList) {
-		if(newList.get(newList.size() - 1).equals(" ")) newList.remove(newList.size() - 1);
-		
-        for (int i = 0; i < newList.size() ; i++) {
+    private  byte rotateLeft(byte bits, int shift)
+    {
+        return (byte)(((bits & 0xff) << shift) | ((bits & 0xff) >>> (8 - shift)));
+    }
+
+    public Boolean gameIsLostForPlayer(String playerString) {
+        return  (!(playerHasCommander(playerString)) || playerHasOnlyCommanderLeft(playerString));
+    }
+    /*
+     * Takes an arrayList of positions and turns it into a properly formated board string
+     */
+    public String arrayListOfPositionsToString(ArrayList<String> newList) {
+
+        for (int i = 0; i < newList.size() - 1 ; i++) {
             String stringToInsert = (i + 1) % 9 == 0 && i < newList.size() - 1 ? "/" : ",";
             newList.set(i,newList.get(i) + stringToInsert);
         }
         String listString = String.join("",newList);
-        
+
         return listString;
-	}
-	
-	/*
-	 * takes a move in a format start-ziel-rotation and returns an updated board position
-	 */
-	public String doMove(String move) {
+    }
+
+    /*
+     * takes a move in a format start-ziel-rotation and returns an updated board position
+     */
+    public String doMove(String move) {
         ArrayList<String> newList = positionsOfFiguresOnBoard();
-		 //get Start and End strings and the rotation
+        //get Start and End strings and the rotation
         String moveStart = move.substring(0,2);
         String moveEnd = move.substring(3,5);
         Integer rotation = Integer.parseInt(move.substring(6));
@@ -55,7 +54,7 @@ public class PloyGameState{
         Integer indexOfStart = getIndexOfAPosition(moveStart);
         Integer indexOfEnd = getIndexOfAPosition(moveEnd);
         //get the code of the moved figure, also only its integer part
-       String figireToMove = whatFigureIsPlacedOnThatPosition(moveStart);
+        String figireToMove = whatFigureIsPlacedOnThatPosition(moveStart);
         int figureCodeInt = Integer.parseInt(figireToMove.substring(1));
 
         //do the rotation on the given figure, rotation method is local
@@ -64,47 +63,47 @@ public class PloyGameState{
         //change the start and end positions in the arraylist of our moves
         newList.set(indexOfStart,"");
         newList.set(indexOfEnd,figureToMoveAfterRotation);
-         String resultingString = arrayListOfPositionsToString(newList);
-         this.board = resultingString;
+        String resultingString = arrayListOfPositionsToString(newList);
+        this.board = resultingString;
 
-         return resultingString;
-	}
-	/*
-	 * Returns the figure code of a figure placed on the specified position
-	 */
-	public String whatFigureIsPlacedOnThatPosition(String position) {
-		ArrayList<String> positionsOfFiguresOnBoard = positionsOfFiguresOnBoard();
+        return resultingString;
+    }
+    /*
+     * Returns the figure code of a figure placed on the specified position
+     */
+    public String whatFigureIsPlacedOnThatPosition(String position) {
+        ArrayList<String> positionsOfFiguresOnBoard = positionsOfFiguresOnBoard();
         int index = getIndexOfAPosition(position);
         String codeOfTheFigure = positionsOfFiguresOnBoard.get(index);
 
         return codeOfTheFigure;
-	}
+    }
 
 
-	/*
-	 * Checks whether a player "w" or "b" has a Commander figure
-	 */
-	public Boolean playerHasCommander(String playerString) {
-		//just a random figure as it does not matter for us here
-		Figure f = new Figure("b1");
-		LinkedList<Integer> allFiguresOfThePlayer = figuresOfAPlayer(playerString);
-		//if there is one of the possible codes of the Commander figure in the list above
-		if(!Collections.disjoint(allFiguresOfThePlayer, f.getCommanderCode())) return true;
-		
-		return false;
-	}
-	
-	/*
-	 * Checks whether a player "w" or "b" has any other figures other than Commander left
-	 */
-	public Boolean playerHasOnlyCommanderLeft(String playerString) {
-		LinkedList<Integer> allFiguresOfTheGivenPlayer = figuresOfAPlayer(playerString);
-		if(allFiguresOfTheGivenPlayer.size() == 1 && playerHasCommander(playerString)) return true;
-		
-		return false;
-	}
-	
-	 /*
+    /*
+     * Checks whether a player "w" or "b" has a Commander figure
+     */
+    public Boolean playerHasCommander(String playerString) {
+        //just a random figure as it does not matter for us here
+        Figure f = new Figure("b1");
+        LinkedList<Integer> allFiguresOfThePlayer = figuresOfAPlayer(playerString);
+        //if there is one of the possible codes of the Commander figure in the list above
+        if(!Collections.disjoint(allFiguresOfThePlayer, f.getCommanderCode())) return true;
+
+        return false;
+    }
+
+    /*
+     * Checks whether a player "w" or "b" has any other figures other than Commander left
+     */
+    public Boolean playerHasOnlyCommanderLeft(String playerString) {
+        LinkedList<Integer> allFiguresOfTheGivenPlayer = figuresOfAPlayer(playerString);
+        if(allFiguresOfTheGivenPlayer.size() == 1 && playerHasCommander(playerString)) return true;
+
+        return false;
+    }
+
+    /*
      * Returns an arraylist of all figures on the current board sorted by their position
      */
     public ArrayList<String> positionsOfFiguresOnBoard() {
@@ -129,7 +128,14 @@ public class PloyGameState{
         if (boardState.charAt(boardState.length() - 1) == ',') {
             array = boardState.split(",");
             arrayList = new ArrayList<String>(Arrays.asList(array));
-            arrayList.add(" ");
+            arrayList.add("");
+            //if there is z.B ,,, in the end regex will ignore it
+            //therefore we need to manually check and add those spots at the end for further positions
+            int ind = 2;
+            while (boardState.charAt(boardState.length() - ind) == ',') {
+                arrayList.add("");
+                ind ++;
+            }
         }
         else {
             array = boardState.split(",");
@@ -137,7 +143,7 @@ public class PloyGameState{
         }
         return arrayList;
     }
-    
+
     /*
      * Get list of all figureCodes(only the string) of a certain player
      * PlaterString "w" or "b"
@@ -161,7 +167,7 @@ public class PloyGameState{
      * Returns the index of a certain position in the arraylist created by the
        positionsOfFiguresOnBoard method
      */
-    
+
     public int getIndexOfAPosition(String position) {
         char column = position.charAt(0);
         int row = Integer.parseInt(position.substring(1));
@@ -169,6 +175,6 @@ public class PloyGameState{
 
         return index;
     }
-	
+
 
 }
