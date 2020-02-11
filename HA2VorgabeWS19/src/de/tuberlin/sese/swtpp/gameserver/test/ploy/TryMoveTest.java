@@ -512,10 +512,28 @@ public class TryMoveTest {
 		assertGameState(",w84,w41,w56,w170,w56,w41,w84,/,,w24,w40,w17,w40,w48,,/,,,w16,w16,w16,,,/,,,,,,,,/,,,,,,,,/,,,b2,,,,,/,,,,b1,b1,,,/,,b3,b130,b17,b130,b129,,/,b69,b146,b131,b170,b131,b146,b69,",true,false,false);
 	}
 	
-	//@Test
-	//public void isProbeMove() {
-		//startGame(",w84,w41,w56,w170,w56,w41,w84,/,,w24,w40,w17,w40,w48,,/,,,w16,w16,w16,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,b1,b1,b1,,,/,,b3,b130,b17,b130,b129,,/,b69,b146,b131,b170,b131,b146,b69,",false);
-		//assertMove("c2-c3-0",false,true);
-		//assertGameState(",w84,w41,w56,w170,w56,w41,w84,/,,w24,w40,w17,w40,w48,,/,,,w16,w16,w16,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,b3,b1,b1,b1,,,/,,,b130,b17,b130,b129,,/,b69,b146,b131,b170,b131,b146,b69,",true,false,false);
-	//}
+	@Test
+	public void gameIsLostBecausePlayerAlreadyLooseCommander() {
+		startGame(",w84,w41,w56,,w56,w41,w84,/,,w24,w40,w17,w40,w48,,/,,,w16,w16,w16,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,b1,b1,b1,,,/,,b3,b130,b17,b130,b129,,/,b69,b146,b131,b170,b131,b146,b69,",false);
+		assertMove("d3-d4-0",false,true);
+		assertGameState(",w84,w41,w56,,w56,w41,w84,/,,w24,w40,w17,w40,w48,,/,,,w16,w16,w16,,,/,,,,,,,,/,,,,,,,,/,,,b1,,,,,/,,,,b1,b1,,,/,,b3,b130,b17,b130,b129,,/,b69,b146,b131,b170,b131,b146,b69,",false,true,false);
+	}
+	
+	@Test
+	public void whiteWinOnlyCommanderLeft() {
+		startGame(",,,,w170,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,w16,,,,/,,,b170,b1,,,,",true);
+		assertMove("e2-e1-0",true,true);
+		assertGameState(",,,,w170,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,b170,w16,,,,",false,true,true);
+	}
+	
+	
+	@Test
+	public void blackWinOnlyCommanderLeft() {
+		startGame(",,,w170,w16,,,,/,,,,b1,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,b170,,,,",false);
+		assertMove("e8-e9-0",false,true);
+		assertGameState(",,,w170,b1,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,,,,,/,,,,b170,,,,",false,true,false);
+	}
+	
+	@Test
+	public void 
 }
