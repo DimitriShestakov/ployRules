@@ -1,13 +1,9 @@
-/**
- * 
- */
 package de.tuberlin.sese.swtpp.gameserver.model.ploy;
 
 import java.util.LinkedList;
 
 
 /**
- * @author Prospero
  * Implements a general Figure on a concrete board
  *
  */
@@ -138,30 +134,10 @@ public class Figure {
         return (n >> k) & 1;
     }
     
-    /*
-     *Set Get 
-     */
-    public LinkedList<String> getdirectionsFacing(){
-		return this.directionsFacing;
-	}
-    public LinkedList<Integer> getShieldCode() {
-    	return this.shieldCode;
-    }
-    public LinkedList<Integer> getProbeCode() {
-    	return this.probeCode;
-    }
-    public LinkedList<Integer> getLanceCode() {
-    	return this.lanceCode;
-    }
+    
     public LinkedList<Integer> getCommanderCode() {
     	return this.commanderCode;
     }
-    public String getFigureCode() {
-    	return this.figureCode;
-    }
-    public String getType() {
-    	return this.type;
-    }
-
+   
     
 }
