@@ -32,6 +32,7 @@ substring :: Int -> Int -> String -> String
 substring start end text = take (end - start) (drop start text)
 
 --gets a moveString and returns all rotations for it
+--TESTED:SUCCESS
 listOfRotatingForAMove :: String -> [String]
 listOfRotatingForAMove moveString = [moveStartEnd ++ show rot| rot <- [0..7]]
  where moveStartEnd = init moveString
@@ -39,6 +40,7 @@ listOfRotatingForAMove moveString = [moveStartEnd ++ show rot| rot <- [0..7]]
 --gets a board string, position on board and a player and returns an array of all possible rotations
 --of a figure on that position
 --returns [] if there is no figure of the player on that position 
+--TESTED:SUCCESS
 listOfRotationMovesForAFigureForAPlayer :: String -> String -> Char -> [String]
 listOfRotationMovesForAFigureForAPlayer board position player
  |(boardStringToList board  !! index) == "" = []
@@ -49,6 +51,7 @@ listOfRotationMovesForAFigureForAPlayer board position player
  
 --gets a board position and returns legit moves from that position
 --all moves within 3 fields in all directions
+--TESTED:SUCCESS
 listOfAllMovesForAPosition :: String -> [String]
 listOfAllMovesForAPosition position  = [moveStart ++ moveTarget ++ "-0"| moveTarget <- allPositions, abs(ord columnS - ord (moveTarget !! 0)) <= 3, abs(rowS - digitToInt (moveTarget !! 1)) <= 3]
  where allPositions = [[x] ++ show y | x <- ['a'..'i'],y <- [1..9]] -- ['x'] == "x"
@@ -60,6 +63,7 @@ listOfAllMovesForAPosition position  = [moveStart ++ moveTarget ++ "-0"| moveTar
 --that follow the rules for that figure
 --adds all the rotations of that move if it is a shield
 --returns [] if there is no figure of the player on that position  
+--TESTED:SUCCESS
 listOfLawfullNonRotationMovesForAFigureForAPlayer ::String ->String -> Char -> [String]
 listOfLawfullNonRotationMovesForAFigureForAPlayer board position player 
  |(boardStringToList board  !! index) == "" = []
@@ -70,10 +74,13 @@ listOfLawfullNonRotationMovesForAFigureForAPlayer board position player
          figureCode = read (drop 1 (boardStringToList board  !! index))
          allMoves = listOfAllMovesForAPosition position
 
+--TESTED:SUCCESS
 listOfLawfillNonRotationMovesForAFigureForAPlayerNotBlocked :: String -> String -> Char -> [String]
 listOfLawfillNonRotationMovesForAFigureForAPlayerNotBlocked board position player = [move | move <- lawfullMoves,not (targetPositionHasWhitesOrBlacksOnIt board move player), not(moveIsBlockedByFiguresInBetween board move)]
  where lawfullMoves = listOfLawfullNonRotationMovesForAFigureForAPlayer board position player 
 
+
+--TESTED:SUCCESS
 listOfMovesForAPlayer :: String -> Char -> [String]
 listOfMovesForAPlayer board player = rotMove ++ goodMove
  where allPositions = [[x] ++ show y | x <- ['a'..'i'],y <- [1..9]]-- ['x'] == "x"
@@ -81,26 +88,32 @@ listOfMovesForAPlayer board player = rotMove ++ goodMove
        goodMove = concat [listOfLawfullNonRotationMovesForAFigureForAPlayer board position player | position <- allPositions]
 
 --recieves an 8 bit unsigned int and returns a list of its rotations
+--TESTED:SUCCESS
 listOfRotations :: Word8 -> [Integer]
 listOfRotations x = [(toInteger (rotate x y))| y <- [0..7]]
 
 --recieves a figure code and returns the list of the directions it faces
+--TESTED:SUCCESS
 figureFaces :: Integer -> [String]
 xs = ["NN","NE","EE","SE","SS","SW","WW","NW"] 
 figureFaces x = [xs !! y |y <- [0..7], testBit x y]
 
 --recieves a board string and returns a list with all positions on the board
+--TESTED:SUCCESS
 boardStringToList :: String -> [String]
 boardStringToList xs = splitOn "," [ if (not (x `elem` "/")) then x else ','| x <- xs]
 
+--TESTED:SUCCESS
 boardStringToListOfAPlayer :: String -> Char -> [String]
 boardStringToListOfAPlayer xs player = [x | x <- boardList,if x == "" then True else (x !! 0) /= oppositePlayer]
  where boardList = boardStringToList xs
        oppositePlayer = if(player == 'w') then 'b' else 'w'
 
 
+
 --recives a code of a figure and returns the type of a figure
 --returns "-1" if there is no such figure
+--TESTED:SUCCESS
 whatFigure :: Integer -> String
 whatFigure code 
  | length directionsFacing == 1 = "shield"
@@ -114,6 +127,9 @@ whatFigure code
 --recives a code of a figure, moveDistance between two board points, direction, rotation
 --returns Bool if the figure with this code can do this move
 
+
+--TESTED:FAIL: test case 1: test with shield,moveDistance=1,boardDirection="d3-d4-0",rotation=False => ergibt False aber es ist True eigentlich
+--TESTED:FAIL: test case 2: test with probe,moveDistance=2,boardDirection="c2-c4-0",rotation=False => ergibt False aber eigentlich True			
 canMoveAccordingToRules :: Integer -> Integer -> String -> Bool -> Bool
 canMoveAccordingToRules figureCode moveDistance boardDirection  rotation
  | moveDistance == 0 && rotation = True
@@ -126,12 +142,14 @@ canMoveAccordingToRules figureCode moveDistance boardDirection  rotation
        figureType = whatFigure figureCode
 
 --recieves a position z.B "a9" and gives it position in the list
+--TESTED:SUCCESS
 getIndexOfAPosition :: String -> Integer
 getIndexOfAPosition position = ((9 - row) * 9) + toInteger (ord column - ord 'a')
  where row = (read (drop 1 position)) :: Integer
        column = position !! 0 :: Char
 
 --recieves a move string and an int 0 and gives beck the distance and direction of the move
+--TESTED:SUCCESS
 distanceAndDirectionOfTheMove :: String -> Integer -> (Integer,String)
 distanceAndDirectionOfTheMove moveString j
  | indexOfStart == indexOfEnd = (0,"") --if a figure does not move
@@ -152,7 +170,8 @@ distanceAndDirectionOfTheMove moveString j
        biggerIndex = max indexOfStart indexOfEnd
        smallerIndex = min indexOfStart indexOfEnd
 
-
+--TESTED:FAIL: test case 1 (target position has white) : ",w84,w41,w56,w170,w56,w41,w84,/,,w24,w40,w17,w40,w48,,/,,,,w16,w16,,,/,,,w16,,,,,/,,,b1,,,,,/,,,,,,,,/,,,,b1,b1,,,/,,b3,b130,b17,b130,b129,,/,b69,b146,b131,b170,b131,b146,b69," "d5-d6-0" 'b' has to return True but return False instead
+--TESTED:FAIL: test case 2 (target position has black) : ",w84,w41,w56,w170,w56,w41,w84,/,,w24,w40,w17,w40,w48,,/,,,,w16,w16,,,/,,,w16,,,,,/,,,b1,,,,,/,,,,,,,,/,,,,b1,b1,,,/,,b3,b130,b17,b130,b129,,/,b69,b146,b131,b170,b131,b146,b69," "d6-d5-0" 'w' has to return True but return False instead
 targetPositionHasWhitesOrBlacksOnIt :: String -> String -> Char -> Bool
 targetPositionHasWhitesOrBlacksOnIt board moveString player
  | allPositions !! targetIndex == "" = False --check for the head "" exception
@@ -161,7 +180,7 @@ targetPositionHasWhitesOrBlacksOnIt board moveString player
  where allPositions = boardStringToList board 
        targetIndex = fromIntegral (getIndexOfAPosition (substring 3 5 moveString))
 
-
+--TESTED:SUCCESS
 moveIsBlockedByFiguresInBetween :: String -> String -> Bool
 moveIsBlockedByFiguresInBetween board moveString 
  | allPositions !! (fromIntegral indexOfStart) == "" = True
