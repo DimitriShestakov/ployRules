@@ -1,2 +1,3 @@
-# ployRules
-Hello, World
+We have made an implementation of the ploy game using Java. The server-client side of the game was implemented by the TU Berlin staff.
+
+Ploy is an abstract strategy board game for two or four players, played on a 9x9 board with a set of 15 pieces (2-handed) or 9 pieces (4-handed and partnership games) per player. Pieces have various horizontal, vertical or diagonal moves somewhat like chess pieces, except directions of movement are limited; pieces change directions of movement by "rotating". Object of the game is to capture the opponent's Commander (analogous to the king in chess), or all of his other pieces.
